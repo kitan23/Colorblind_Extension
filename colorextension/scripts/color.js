@@ -462,21 +462,40 @@ $(document).ready(function () {
 	};
 
 	// function to toggle black text on white background theme
+
+	const linksList = document.getElementsByTagName("a");
+	let linksColorList = [];
+	for (var i = 0; i < linksList.length; i++) {
+		if (linksList[i].href) {
+			linksColorList.push(linksList[i].style.color);
+		}
+	}
 	function toggleWhiteOnBlackTheme() {
 		console.log("toggle white on black theme");
+
 		if (document.body.classList.contains("whiteOnBlack")) {
 			document.body.classList.remove("whiteOnBlack");
+			for (var i = 0; i < linksList.length; i++) {
+				if (linksList[i].href) {
+					linksList[i].style.color = linksColorList[i];
+				}
+			}
 		} else {
 			document.body.classList.add("whiteOnBlack");
+			for (var i = 0; i < linksList.length; i++) {
+				if (linksList[i].href) {
+					linksList[i].style.color = "#3cabee";
+				}
+			}
 		}
 
 		// change all links' color to #A8A8FF (has passed the contrast ratio test for black background)
-		let linksList = document.getElementsByTagName("a");
-		for (var i = 0; i < linksList.length; i++) {
-			if (linksList[i].href) {
-				linksList[i].style.color = "#A8A8FF";
-			}
-		}
+		//let linksList = document.getElementsByTagName("a");
+		// for (var i = 0; i < linksList.length; i++) {
+		// 	if (linksList[i].href) {
+		// 		linksList[i].style.color = "#A8A8FF";
+		// 	}
+		// }
 	}
 
 	// Create a mapping object
