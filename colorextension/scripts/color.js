@@ -12,7 +12,7 @@ function createTypeButton(typeName) {
 function createRGBSlider(colorValue) {
 	return `
 	<input type="range" min="0" max="255" value = "0" class="rbgslider" id="${colorValue}">
-	<p> ${colorValue} <span id="${colorValue}Value">0</span></p>
+	<p style="color:black;"> ${colorValue} <span id="${colorValue}Value">0</span></p>
 	`;
 }
 
@@ -447,10 +447,6 @@ $(document).ready(function () {
 		canvasContent.putImageData(imageInfoList, 0, 0);
 	};
 
-	// ---------------------------------------------------
-	// Call Function
-	loopThroughImgs();
-
 	const versionButton1 = createTypeButton("ColorBlindType1");
 	const versionButton2 = createTypeButton("ColorBlindType2");
 
@@ -508,4 +504,29 @@ $(document).ready(function () {
 			colorBlindMenu.style.visibility = "hidden";
 		}
 	});
+
+	// function to toggle black text on white background theme
+	function toggleWhiteOnBlackTheme() {
+		if (document.body.classList.contains("whiteOnBlack")) {
+			document.body.classList.remove("whiteOnBlack");
+		} else {
+			document.body.classList.add("whiteOnBlack");
+		}
+
+		// change all links' color to #A8A8FF (has passed the contrast ratio test for black background)
+		let linksList = document.getElementsByTagName("a");
+		for (var i = 0; i < linksList.length; i++) {
+			if (linksList[i].href) {
+				linksList[i].style.color = "#A8A8FF";
+			}
+		}
+	}
+
+	// ---------------------------------------------------
+	// Call Function
+	// Loop through all the images and apply filters
+	loopThroughImgs();
+
+	// Toggle black text on white background theme
+	toggleWhiteOnBlackTheme();
 });
