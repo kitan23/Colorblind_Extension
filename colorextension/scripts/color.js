@@ -4,6 +4,12 @@
  * @date:   October 27, 2023
  * @desc:  This file contains the code for the colorblind extension.
  */
+let rSliderValue = 0;
+let gSliderValue = 0;
+let bSliderValue = 0;
+let filterName = 0;
+
+
 
 function createTypeButton(typeName) {
 	return `<button type="button" class="versionButton">${typeName}</button>`;
@@ -11,6 +17,18 @@ function createTypeButton(typeName) {
 
 function createButtonWithFunction(buttonName, func) {
 	return `<button type="button" class="versionButton" func="${func.name}">${buttonName}</button>`;
+}
+
+function createButton0WithFunction(buttonName) {
+	filterName = 0;
+	console.log("change filter name to 0");
+	return `<button type="button" id="revertColor">${buttonName}</button>`;
+}
+
+function createButton1WithFunction(buttonName) {
+	filterName = 1;
+	console.log("change filter name to 1");
+	return `<button type="button" id="invertGreen">${buttonName}</button>`;
 }
 
 function createRGBSlider(colorValue) {
@@ -21,11 +39,11 @@ function createRGBSlider(colorValue) {
 }
 
 // Anything that appears between the curly braces will not be run until the whole web page has loaded
-$(document).ready(function () {
+// $(document).ready(function () {
 	// -------------------------------------------------
 	// ----------Image Filter Overall Function:---------
 	// Overall Func 1: Loop through images to apply filter
-	const loopThroughImgs = (filterName) => {
+	const loopThroughImgs = () => {
 		const imageList = document.getElementsByTagName("img"); // get a list of images
 		const imageListLength = imageList.length;
 
@@ -38,12 +56,12 @@ $(document).ready(function () {
 		for (let imgIndex = 0; imgIndex < imageListLength; imgIndex += 1) {
 			console.log("Image index ", imgIndex); // testing
 			thisNameID = nameIDList[imgIndex];
-			applyFilterToImage(imgIndex, imageList, thisNameID, filterName);
+			applyFilterToImage(imgIndex, imageList, thisNameID);
 		}
 	};
 
 	// Overall Func 2: Apply filter to one image
-	const applyFilterToImage = (imgIndex, imageList, nameID, filterName) => {
+	const applyFilterToImage = (imgIndex, imageList, nameID) => {
 		// 1 getting and setting up manipulable image from the image list
 		// CITE: Mozilla
 		// URL: https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/Image
@@ -96,39 +114,103 @@ $(document).ready(function () {
 		// URL: https://stackoverflow.com/questions/19396390/load-image-from-javascript
 		// We learned how to load image into html from Javascript.
 		thisImage.onload = () => {
-			console.log("canvas content: ", canvasContent); // testing
-			console.log("this image info: ", thisImage); // testing
-			console.log("image width after load: ", thisImage.width); // testing
-			console.log("image height after load: ", thisImage.height); // testing
+			if (filterName == 0){
+				console.log("filter name is :", filterName);
+				RevertImageToOri();
+			}
+			else if (filterName == 1) {
+				// Setting canvas dimension to that of image
+				thisCanvas.width = thisImage.width;
+				thisCanvas.height = thisImage.height;
 
-			// Setting canvas dimension to that of image
-			thisCanvas.width = thisImage.width;
-			thisCanvas.height = thisImage.height;
+				console.log("topCoordImage: ", topCoordImage); // testing
+				console.log("leftCoordImage: ", leftCoordImage); // testing
 
-			console.log("topCoordImage: ", topCoordImage); // testing
-			console.log("leftCoordImage: ", leftCoordImage); // testing
+				// Draw image on canvas
+				// CITE: Mozilla
+				// URL: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+				// HELP: We learned how to draw images on webpage on canvas.
+				// Syntax: .drawImage(image, dx, dy, dWidth, dHeight)
+				canvasContent.drawImage(
+					thisImage,
+					0,
+					0,
+					thisCanvas.width,
+					thisCanvas.height
+				); // use original image size
+				console.log("filter name is :", filterName);
+				invertGreen(topCoordImage,	leftCoordImage, canvasContent, thisCanvas);
+			}
+			else if (filterName == 2){
+				// Setting canvas dimension to that of image
+				thisCanvas.width = thisImage.width;
+				thisCanvas.height = thisImage.height;
 
-			// Draw image on canvas
-			// CITE: Mozilla
-			// URL: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
-			// HELP: We learned how to draw images on webpage on canvas.
-			// Syntax: .drawImage(image, dx, dy, dWidth, dHeight)
-			canvasContent.drawImage(
-				thisImage,
-				0,
-				0,
-				thisCanvas.width,
-				thisCanvas.height
-			); // use original image size
+				console.log("topCoordImage: ", topCoordImage); // testing
+				console.log("leftCoordImage: ", leftCoordImage); // testing
 
-			// --CALL COLOR MANIPULATION HELPER FUNCTIONS HERE--
-			// If to invert green value
-			invertGreen(
-				topCoordImage,
-				leftCoordImage,
-				canvasContent,
-				thisCanvas
-			);
+				// Draw image on canvas
+				// CITE: Mozilla
+				// URL: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+				// HELP: We learned how to draw images on webpage on canvas.
+				// Syntax: .drawImage(image, dx, dy, dWidth, dHeight)
+				canvasContent.drawImage(
+					thisImage,
+					0,
+					0,
+					thisCanvas.width,
+					thisCanvas.height
+				); // use original image size
+				console.log("filter name is :", filterName);
+				sliderChangeRed(topCoordImage, leftCoordImage, canvasContent, thisCanvas, rSliderValue);
+			}
+
+			else if (filterName == 3){
+				// Setting canvas dimension to that of image
+				thisCanvas.width = thisImage.width;
+				thisCanvas.height = thisImage.height;
+
+				console.log("topCoordImage: ", topCoordImage); // testing
+				console.log("leftCoordImage: ", leftCoordImage); // testing
+
+				// Draw image on canvas
+				// CITE: Mozilla
+				// URL: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+				// HELP: We learned how to draw images on webpage on canvas.
+				// Syntax: .drawImage(image, dx, dy, dWidth, dHeight)
+				canvasContent.drawImage(
+					thisImage,
+					0,
+					0,
+					thisCanvas.width,
+					thisCanvas.height
+				); // use original image size
+				console.log("filter name is :", filterName);
+				sliderChangeGreen(topCoordImage, leftCoordImage, canvasContent, thisCanvas, rSliderValue);
+			}
+			else if (filterName == 4){
+				// Setting canvas dimension to that of image
+				thisCanvas.width = thisImage.width;
+				thisCanvas.height = thisImage.height;
+
+				console.log("topCoordImage: ", topCoordImage); // testing
+				console.log("leftCoordImage: ", leftCoordImage); // testing
+
+				// Draw image on canvas
+				// CITE: Mozilla
+				// URL: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+				// HELP: We learned how to draw images on webpage on canvas.
+				// Syntax: .drawImage(image, dx, dy, dWidth, dHeight)
+				canvasContent.drawImage(
+					thisImage,
+					0,
+					0,
+					thisCanvas.width,
+					thisCanvas.height
+				); // use original image size
+				console.log("filter name is :", filterName);
+				sliderChangeBlue(topCoordImage, leftCoordImage, canvasContent, thisCanvas, rSliderValue);
+			}
 
 			// If to invert Red value
 			//invertRed(topCoordImage, leftCoordImage, canvasContent, thisCanvas);
@@ -453,6 +535,7 @@ $(document).ready(function () {
 		canvasContent.putImageData(imageInfoList, 0, 0);
 	};
 
+	// Func 9 -- Revert image color to original by deleting canvas
 	const RevertImageToOri = () => {
 		const allCanvas = document.querySelectorAll("canvas");
 		const listLen = allCanvas.length;
@@ -462,7 +545,6 @@ $(document).ready(function () {
 	};
 
 	// function to toggle black text on white background theme
-
 	const linksList = document.getElementsByTagName("a");
 	let linksColorList = [];
 	for (var i = 0; i < linksList.length; i++) {
@@ -489,14 +571,8 @@ $(document).ready(function () {
 			}
 		}
 
-		// change all links' color to #A8A8FF (has passed the contrast ratio test for black background)
-		//let linksList = document.getElementsByTagName("a");
-		// for (var i = 0; i < linksList.length; i++) {
-		// 	if (linksList[i].href) {
-		// 		linksList[i].style.color = "#A8A8FF";
-		// 	}
-		// }
 	}
+
 
 	// Create a mapping object
 	const funcMap = {
@@ -504,13 +580,11 @@ $(document).ready(function () {
 		loopThroughImgs: loopThroughImgs,
 	};
 
-	const versionButton1 = createButtonWithFunction(
-		"Invert Green",
-		loopThroughImgs
+	const versionButton1 = createButton1WithFunction(
+		"Invert Green"
 	);
-	const versionButton2 = createButtonWithFunction(
-		"Revert Images to Normal",
-		RevertImageToOri
+	const versionButton2 = createButton0WithFunction(
+		"Revert Images to Normal"
 	);
 	const whiteOnBlackTheme = createButtonWithFunction(
 		"White on Black",
@@ -555,27 +629,60 @@ $(document).ready(function () {
 			}
 		});
 
+	const revertColorBut = document.getElementById("revertColor");
+	const invertGreenBut = document.getElementById("invertGreen");
+	document.addEventListener("click", function (event){
+		if (event.target.id == "revertColor"){
+			filterName = 0;
+			RevertImageToOri();
+		}
+		else if (event.target.id == "invertGreen"){
+			filterName = 1;
+			loopThroughImgs()
+		}
+
+	});
+
+
 	//CITE: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_js_rangeslider
 	//DESC: Used to learn how to create a slider and store its value.
 	const redSlider = document.getElementById("Red");
 	const greenSlider = document.getElementById("Green");
 	const blueSlider = document.getElementById("Blue");
 
-	redSlider.oninput = function () {
+	function onSliderRChange() {
 		let redValue = redSlider.value;
 		let redOutput = document.getElementById("RedValue");
 		redOutput.innerHTML = this.value;
-	};
-	greenSlider.oninput = function () {
+		rSliderValue = this.value;
+		filterName = 2;
+		loopThroughImgs();
+	}
+
+	function onSliderGChange() {
 		let greenValue = greenSlider.value;
 		let greenOutput = document.getElementById("GreenValue");
 		greenOutput.innerHTML = this.value;
-	};
-	blueSlider.oninput = function () {
+		gSliderValue = this.value;
+		filterName = 3;
+		loopThroughImgs();
+	}
+
+	function onSliderBChange() {
 		let blueValue = blueSlider.value;
 		let blueOutput = document.getElementById("BlueValue");
 		blueOutput.innerHTML = this.value;
-	};
+		bSliderValue = this.value;
+		filterName = 4;
+		loopThroughImgs();
+	}
+
+
+
+	redSlider.addEventListener("change", onSliderRChange);
+	greenSlider.addEventListener("change", onSliderGChange);
+	blueSlider.addEventListener("change", onSliderBChange);
+
 
 	const colorBlindButton = document.getElementById("optionsButton");
 	const colorBlindMenu = document.getElementById("colorBlindMenu");
@@ -594,4 +701,4 @@ $(document).ready(function () {
 
 	// Toggle black text on white background theme
 	// toggleWhiteOnBlackTheme();
-});
+// });
