@@ -144,7 +144,7 @@ $(document).ready(function () {
 			//let valueG = 0; // testing -- NEED to be replaced by passing value from slider for green to value G
 			//sliderChangeGreen(topCoordImage, leftCoordImage, canvasContent, thisCanvas, valueG);
 
-			RevertImageToOri();
+			// RevertImageToOri();
 		};
 	};
 
