@@ -1,0 +1,65 @@
+/* .highlight {
+    border-style: solid;
+    border-color: red;
+    } */
+
+#optionsButton {
+	background-color: mediumspringgreen;
+	border: none;
+	color: white;
+	padding: 15px 32px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	border-radius: 5px;
+	position: fixed;
+	right: 50px;
+}
+
+#colorBlindMenu {
+	visibility: hidden;
+	display: grid;
+	background-color: rgb(46, 42, 40);
+	grid-template-columns: auto auto auto;
+	padding: 10px;
+	position: fixed;
+	left: 40%;
+	z-index: 10;
+}
+
+.choiceItem {
+	padding: 20px;
+	background-color: rgb(242, 237, 231);
+	/* border: 1px solid rgb(0, 0, 0); */
+}
+
+.rbgslider {
+	height: 20px;
+	background: gainsboro;
+	opacity: 0.5;
+	-webkit-transition: 0.2s;
+	transition: opacity 0.2s;
+	font-family: "Courier New", Courier, monospace;
+}
+
+/*
+	  * CITE: https://www.w3schools.com/css/
+	  * DESC: Used for the various CSS properties.
+	  */
+/* #refactor {
+		  
+		  position: absolute;
+		  position: fixed;
+		  top: 50%;
+		  left: 50%;
+		  z-index: 10;
+		  font-size: 24px;
+		  background-color: white;
+		  margin: "-25px 0 0 -25px";
+		  border-radius: 25px;
+		  padding: 25px;
+		  border: 2px solid #000000;
+		  transform: translate(-50%, -50%);
+		  
+	 } */
