@@ -9,6 +9,10 @@ function createTypeButton(typeName) {
 	return `<button type="button" class="versionButton">${typeName}</button>`;
 }
 
+function createButtonWithFunction(buttonName, func) {
+	return `<button type="button" class="versionButton" func="${func.name}">${buttonName}</button>`;
+}
+
 function createRGBSlider(colorValue) {
 	return `
 	<input type="range" min="0" max="255" value = "0" class="rbgslider" id="${colorValue}">
@@ -21,7 +25,7 @@ $(document).ready(function () {
 	// -------------------------------------------------
 	// ----------Image Filter Overall Function:---------
 	// Overall Func 1: Loop through images to apply filter
-	const loopThroughImgs = () => {
+	const loopThroughImgs = (filterName) => {
 		const imageList = document.getElementsByTagName("img"); // get a list of images
 		const imageListLength = imageList.length;
 
@@ -34,12 +38,12 @@ $(document).ready(function () {
 		for (let imgIndex = 0; imgIndex < imageListLength; imgIndex += 1) {
 			console.log("Image index ", imgIndex); // testing
 			thisNameID = nameIDList[imgIndex];
-			applyFilterToImage(imgIndex, imageList, thisNameID);
+			applyFilterToImage(imgIndex, imageList, thisNameID, filterName);
 		}
 	};
 
 	// Overall Func 2: Apply filter to one image
-	const applyFilterToImage = (imgIndex, imageList, nameID) => {
+	const applyFilterToImage = (imgIndex, imageList, nameID, filterName) => {
 		// 1 getting and setting up manipulable image from the image list
 		// CITE: Mozilla
 		// URL: https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/Image
@@ -139,6 +143,8 @@ $(document).ready(function () {
 			// valueG is the value from slider
 			//let valueG = 0; // testing -- NEED to be replaced by passing value from slider for green to value G
 			//sliderChangeGreen(topCoordImage, leftCoordImage, canvasContent, thisCanvas, valueG);
+
+			RevertImageToOri();
 		};
 	};
 
@@ -447,8 +453,50 @@ $(document).ready(function () {
 		canvasContent.putImageData(imageInfoList, 0, 0);
 	};
 
-	const versionButton1 = createTypeButton("ColorBlindType1");
-	const versionButton2 = createTypeButton("ColorBlindType2");
+	const RevertImageToOri = () => {
+		const allCanvas = document.querySelectorAll("canvas");
+		const listLen = allCanvas.length;
+		for (let index = 0; index < listLen; index++) {
+			allCanvas[index].parentNode.removeChild(allCanvas[index]);
+		}
+	};
+
+	// function to toggle black text on white background theme
+	function toggleWhiteOnBlackTheme() {
+		console.log("toggle white on black theme");
+		if (document.body.classList.contains("whiteOnBlack")) {
+			document.body.classList.remove("whiteOnBlack");
+		} else {
+			document.body.classList.add("whiteOnBlack");
+		}
+
+		// change all links' color to #A8A8FF (has passed the contrast ratio test for black background)
+		let linksList = document.getElementsByTagName("a");
+		for (var i = 0; i < linksList.length; i++) {
+			if (linksList[i].href) {
+				linksList[i].style.color = "#A8A8FF";
+			}
+		}
+	}
+
+	// Create a mapping object
+	const funcMap = {
+		toggleWhiteOnBlackTheme: toggleWhiteOnBlackTheme,
+		loopThroughImgs: loopThroughImgs,
+	};
+
+	const versionButton1 = createButtonWithFunction(
+		"Invert Green",
+		loopThroughImgs
+	);
+	const versionButton2 = createButtonWithFunction(
+		"Revert Images to Normal",
+		RevertImageToOri
+	);
+	const whiteOnBlackTheme = createButtonWithFunction(
+		"White on Black",
+		toggleWhiteOnBlackTheme
+	);
 
 	//CITE: https://www.w3schools.com/css/css_grid.asp
 	//DESC: Used to learn how to create a grid layout menu.
@@ -456,6 +504,7 @@ $(document).ready(function () {
 	<div id="colorBlindMenu">
 	<div class="choiceItem">${versionButton1}</div>
 	<div class="choiceItem">${versionButton2}</div>
+	<div class="choiceItem">${whiteOnBlackTheme}</div>
 	<div class="choiceItem"></div>
 	<div class="choiceItem"></div>
 	<div class="choiceItem"></div>
@@ -472,6 +521,20 @@ $(document).ready(function () {
 	$("body").prepend(
 		`<button type="button" id="optionsButton">Color Blind Options</button>`
 	);
+
+	document
+		.querySelector("#colorBlindMenu")
+		.addEventListener("click", function (event) {
+			if (event.target.matches(".versionButton")) {
+				const func = event.target.getAttribute("func");
+				console.log("BUTTON CLICKED");
+				console.log(func);
+				if (funcMap[func]) {
+					console.log("YES");
+					funcMap[func]();
+				}
+			}
+		});
 
 	//CITE: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_js_rangeslider
 	//DESC: Used to learn how to create a slider and store its value.
@@ -505,28 +568,11 @@ $(document).ready(function () {
 		}
 	});
 
-	// function to toggle black text on white background theme
-	function toggleWhiteOnBlackTheme() {
-		if (document.body.classList.contains("whiteOnBlack")) {
-			document.body.classList.remove("whiteOnBlack");
-		} else {
-			document.body.classList.add("whiteOnBlack");
-		}
-
-		// change all links' color to #A8A8FF (has passed the contrast ratio test for black background)
-		let linksList = document.getElementsByTagName("a");
-		for (var i = 0; i < linksList.length; i++) {
-			if (linksList[i].href) {
-				linksList[i].style.color = "#A8A8FF";
-			}
-		}
-	}
-
 	// ---------------------------------------------------
 	// Call Function
 	// Loop through all the images and apply filters
-	loopThroughImgs();
+	// loopThroughImgs();
 
 	// Toggle black text on white background theme
-	toggleWhiteOnBlackTheme();
+	// toggleWhiteOnBlackTheme();
 });
